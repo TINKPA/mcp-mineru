@@ -42,9 +42,6 @@ Check system capabilities and get backend recommendations.
 ```bash
 # Using uv (faster, recommended)
 uv pip install mcp-mineru
-
-# Or using pip
-pip install mcp-mineru
 ```
 
 ### Option 2: Install from Source
@@ -69,11 +66,19 @@ The `mineru[core]` dependency will automatically install all backends (pipeline,
 
 ### Claude Code (Recommended)
 
-Use the Claude Code CLI to add the server directly:
+After installing from PyPI, add the server using Claude Code CLI:
 
 ```bash
-# Replace /absolute/path/to/mcp-mineru with your actual path
-# Using --scope user makes it available across all your projects
+# If installed from PyPI (recommended)
+claude mcp add --transport stdio --scope user mineru -- \
+  python -m mcp_mineru.server
+```
+
+<details>
+<summary>If installed from source (click to expand)</summary>
+
+```bash
+# Replace /absolute/path/to/mcp-mineru with your actual installation path
 claude mcp add --transport stdio --scope user mineru -- \
   python /absolute/path/to/mcp-mineru/src/mcp_mineru/server.py
 ```
@@ -84,6 +89,8 @@ Or using uv:
 claude mcp add --transport stdio --scope user mineru -- \
   uv --directory /absolute/path/to/mcp-mineru run python src/mcp_mineru/server.py
 ```
+
+</details>
 
 **Configuration Scope Options**:
 - `--scope user` (recommended): Available across all your projects
@@ -98,6 +105,22 @@ Add to your Claude Desktop configuration file:
 
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
+**If installed from PyPI** (simpler):
+
+```json
+{
+  "mcpServers": {
+    "mineru": {
+      "command": "python",
+      "args": ["-m", "mcp_mineru.server"]
+    }
+  }
+}
+```
+
+<details>
+<summary>If installed from source (click to expand)</summary>
+
 ```json
 {
   "mcpServers": {
@@ -111,7 +134,7 @@ Add to your Claude Desktop configuration file:
 }
 ```
 
-Or using uv (recommended):
+Or using uv:
 
 ```json
 {
@@ -129,6 +152,8 @@ Or using uv (recommended):
   }
 }
 ```
+
+</details>
 
 ## 📖 Usage Examples
 
