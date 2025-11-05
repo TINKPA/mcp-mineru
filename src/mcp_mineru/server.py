@@ -11,10 +11,6 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-# Add MinerU to path
-MINERU_PATH = Path(__file__).parent.parent.parent / "MinerU"
-sys.path.insert(0, str(MINERU_PATH))
-
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent

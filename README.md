@@ -30,36 +30,50 @@ Check system capabilities and get backend recommendations.
 ## 🛠️ Installation
 
 ### Prerequisites
-- Python 3.10+
+- Python 3.10-3.13
 - uv (recommended) or pip
 
-### Step 1: Clone the repository
+### Quick Install
+
 ```bash
+# Clone the repository
 git clone <your-repo-url> mcp-mineru
 cd mcp-mineru
-```
 
-### Step 2: Initialize submodules
-```bash
-git submodule update --init --recursive
-```
-
-### Step 3: Install MinerU dependencies
-```bash
-# Install MinerU in the submodule
-cd MinerU
-pip install -e .
-cd ..
-```
-
-### Step 4: Install MCP server
-```bash
+# Install with all dependencies (one command!)
 pip install -e .
 ```
+
+That's it! The `mineru[core]` dependency will automatically install all backends (pipeline, vlm, mlx).
 
 ## 🔧 Configuration
 
-### Claude Desktop
+### Claude Code (Recommended)
+
+Use the Claude Code CLI to add the server directly:
+
+```bash
+# Replace /absolute/path/to/mcp-mineru with your actual path
+# Using --scope user makes it available across all your projects
+claude mcp add --transport stdio --scope user mineru -- \
+  python /absolute/path/to/mcp-mineru/src/mcp_mineru/server.py
+```
+
+Or using uv:
+
+```bash
+claude mcp add --transport stdio --scope user mineru -- \
+  uv --directory /absolute/path/to/mcp-mineru run python src/mcp_mineru/server.py
+```
+
+**Configuration Scope Options**:
+- `--scope user` (recommended): Available across all your projects
+- `--scope local`: Available only in the current project (default)
+- `--scope project`: Shared with everyone via `.mcp.json` file
+
+**Note**: The `--` (double dash) separates Claude's CLI flags from the command that runs the MCP server. Everything after `--` is the actual command to execute.
+
+### Claude Desktop (Manual Configuration)
 
 Add to your Claude Desktop configuration file:
 
@@ -78,7 +92,7 @@ Add to your Claude Desktop configuration file:
 }
 ```
 
-### Using uv (recommended)
+Or using uv (recommended):
 
 ```json
 {
@@ -89,7 +103,8 @@ Add to your Claude Desktop configuration file:
         "--directory",
         "/absolute/path/to/mcp-mineru",
         "run",
-        "mcp-mineru"
+        "python",
+        "src/mcp_mineru/server.py"
       ]
     }
   }
@@ -136,6 +151,19 @@ black src/
 ruff check src/
 ```
 
+## ❓ Troubleshooting
+
+### ModuleNotFoundError when running tests
+
+If you see errors like `ModuleNotFoundError: No module named 'mineru'` or `'torch'`:
+
+**Solution**: Reinstall the package to ensure all dependencies are installed:
+```bash
+pip install -e .
+```
+
+The `mineru[core]` dependency should automatically install all required backends.
+
 ## 🚀 Performance
 
 On Apple Silicon (M4):
@@ -149,7 +177,13 @@ On Apple Silicon (M4):
 
 This project uses MinerU as a submodule, which is licensed under the Apache License 2.0.
 
-## 🙏 Acknowledgments
+## 🙏 Dependencies & Acknowledgments
 
-- [MinerU](https://github.com/opendatalab/MinerU) - The powerful PDF parsing engine
-- [MCP](https://modelcontextprotocol.io/) - Model Context Protocol specification
+This project is built on top of:
+
+- **[MinerU](https://github.com/opendatalab/MinerU)** (Apache 2.0)
+  - Core PDF parsing engine
+  - Included as git submodule for development stability
+  
+- **[MCP](https://modelcontextprotocol.io/)** (MIT)
+  - Model Context Protocol specification
