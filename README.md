@@ -35,12 +35,15 @@ Check system capabilities and get backend recommendations.
 
 ### Prerequisites
 - Python 3.10-3.13
-- pip or uv
+- [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
 ### Option 1: Install from PyPI (Recommended)
 
 ```bash
-# Install directly from PyPI
+# Using uv (faster, recommended)
+uv pip install mcp-mineru
+
+# Or using pip
 pip install mcp-mineru
 ```
 
@@ -52,7 +55,7 @@ git clone https://github.com/TINKPA/mcp-mineru.git
 cd mcp-mineru
 
 # Install in editable mode
-pip install -e .
+uv pip install -e .  # or: pip install -e .
 ```
 
 The `mineru[core]` dependency will automatically install all backends (pipeline, vlm, mlx) including:
