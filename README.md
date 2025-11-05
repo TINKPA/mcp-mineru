@@ -6,6 +6,17 @@
 
 A Model Context Protocol (MCP) server that brings powerful PDF parsing capabilities to Claude using [MinerU](https://github.com/opendatalab/MinerU).
 
+## 🚀 Quick Start
+
+Get started in one command (requires [uv](https://docs.astral.sh/uv/)):
+
+```bash
+claude mcp add --transport stdio --scope user mineru -- \
+  uvx --from mcp-mineru python -m mcp_mineru.server
+```
+
+That's it! The server will auto-install and be available in all your Claude projects.
+
 ## ✨ Features
 
 - 📄 **Parse PDF files** with high accuracy
@@ -64,15 +75,36 @@ The `mineru[core]` dependency will automatically install all backends (pipeline,
 
 ## 🔧 Configuration
 
-### Claude Code (Recommended)
+### One-Command Setup (Easiest)
 
-After installing from PyPI, add the server using Claude Code CLI:
+Install and configure in one step using `uvx`:
 
 ```bash
-# If installed from PyPI (recommended)
+# One command does everything! (no manual install needed)
+claude mcp add --transport stdio --scope user mineru -- \
+  uvx --from mcp-mineru python -m mcp_mineru.server
+```
+
+This uses `uvx` to automatically install `mcp-mineru` in an isolated environment each time it runs. No need to install anything manually!
+
+### Alternative: Traditional Setup
+
+<details>
+<summary>If you prefer to install first, then configure (click to expand)</summary>
+
+**Step 1: Install**
+```bash
+uv pip install mcp-mineru
+# or: pip install mcp-mineru
+```
+
+**Step 2: Configure**
+```bash
 claude mcp add --transport stdio --scope user mineru -- \
   python -m mcp_mineru.server
 ```
+
+</details>
 
 <details>
 <summary>If installed from source (click to expand)</summary>
