@@ -1,5 +1,9 @@
 # 🚀 MCP-MinerU
 
+[![PyPI version](https://badge.fury.io/py/mcp-mineru.svg)](https://pypi.org/project/mcp-mineru/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+
 A Model Context Protocol (MCP) server that brings powerful PDF parsing capabilities to Claude using [MinerU](https://github.com/opendatalab/MinerU).
 
 ## ✨ Features
@@ -31,20 +35,32 @@ Check system capabilities and get backend recommendations.
 
 ### Prerequisites
 - Python 3.10-3.13
-- uv (recommended) or pip
+- pip or uv
 
-### Quick Install
+### Option 1: Install from PyPI (Recommended)
+
+```bash
+# Install directly from PyPI
+pip install mcp-mineru
+```
+
+### Option 2: Install from Source
 
 ```bash
 # Clone the repository
 git clone https://github.com/TINKPA/mcp-mineru.git
 cd mcp-mineru
 
-# Install with all dependencies (one command!)
+# Install in editable mode
 pip install -e .
 ```
 
-That's it! The `mineru[core]` dependency will automatically install all backends (pipeline, vlm, mlx).
+The `mineru[core]` dependency will automatically install all backends (pipeline, vlm, mlx) including:
+- 🔥 **PyTorch** for deep learning models
+- 🖼️ **Computer Vision** libraries (OpenCV, ultralytics)
+- 📊 **OCR engines** (PaddleOCR, RapidOCR)
+- ⚡️ **MLX** for Apple Silicon acceleration
+- 🌐 **Web interfaces** (Gradio, FastAPI)
 
 ## 🔧 Configuration
 
