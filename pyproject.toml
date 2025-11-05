@@ -1,12 +1,12 @@
 [project]
 name = "mcp-mineru"
 version = "0.1.0"
-description = "MCP server for MinerU - PDF parsing with MLX acceleration on Apple Silicon"
+description = "MCP server for MinerU - Parse PDFs and images (OCR) with MLX acceleration on Apple Silicon"
 authors = [{name = "TINKPA", email = "tinkpa@example.com"}]
 readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.10,<3.14"
-keywords = ["mcp", "mineru", "pdf", "parsing", "mlx", "apple-silicon", "claude"]
+keywords = ["mcp", "mineru", "pdf", "ocr", "image", "parsing", "mlx", "apple-silicon", "claude", "screenshot", "document"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

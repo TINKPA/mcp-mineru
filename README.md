@@ -4,7 +4,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
-A Model Context Protocol (MCP) server that brings powerful PDF parsing capabilities to Claude using [MinerU](https://github.com/opendatalab/MinerU).
+A Model Context Protocol (MCP) server that brings powerful document and image parsing capabilities to Claude using [MinerU](https://github.com/opendatalab/MinerU). Extract text, tables, and formulas from PDFs, screenshots, photos, and scanned documents.
 
 ## 🚀 Quick Start
 
@@ -30,7 +30,8 @@ This adds the server only to your current project.
 
 ## ✨ Features
 
-- 📄 **Parse PDF files** with high accuracy
+- 📄 **Parse multiple formats**: PDF, JPEG, PNG, and other image formats
+- 📸 **Process screenshots and photos** with built-in OCR
 - 🧮 **Extract formulas** and mathematical equations
 - 📊 **Recognize tables** and preserve structure
 - ⚡️ **MLX acceleration** on Apple Silicon (M1/M2/M3/M4)
@@ -40,18 +41,24 @@ This adds the server only to your current project.
 ## 🎯 Tools
 
 ### `parse_pdf`
-Parse PDF files and extract structured content as Markdown.
+Parse PDF and image files (PDF, JPEG, PNG, etc.) and extract structured content as Markdown. Works with documents, screenshots, photos, and scanned images.
 
 **Parameters:**
-- `file_path` (required): Absolute path to the PDF file
+- `file_path` (required): Absolute path to the file (supports PDF, JPEG, PNG, and other formats)
 - `backend` (optional): `pipeline` | `vlm-mlx-engine` | `vlm-transformers`
 - `formula_enable` (optional): Enable formula recognition (default: true)
 - `table_enable` (optional): Enable table recognition (default: true)
-- `start_page` (optional): Starting page number (default: 0)
-- `end_page` (optional): Ending page number (default: -1 for all pages)
+- `start_page` (optional): Starting page number for PDFs (default: 0)
+- `end_page` (optional): Ending page number for PDFs (default: -1 for all pages)
+
+**Supported Formats:**
+- 📄 PDF documents
+- 📸 JPEG/JPG images
+- 🖼️ PNG images
+- 📷 Other image formats (WebP, GIF, etc.)
 
 ### `list_backends`
-Check system capabilities and get backend recommendations.
+Check system capabilities and get backend recommendations for document and image parsing.
 
 ## 🛠️ Installation
 
@@ -204,6 +211,22 @@ User: "Extract pages 10-15 from this PDF"
 
 Claude: [Calls parse_pdf with start_page=9, end_page=14]
 "Here's the content from pages 10-15..."
+```
+
+### Example 4: Parse a screenshot
+```
+User: "Extract the text from this screenshot: /path/to/screenshot.png"
+
+Claude: [Calls parse_pdf tool with image file]
+"The screenshot contains the following text: ..."
+```
+
+### Example 5: OCR a photo
+```
+User: "Read the text in this photo: /path/to/photo.jpg"
+
+Claude: [Calls parse_pdf tool]
+"I've extracted the text from the photo. It shows..."
 ```
 
 ## 🏗️ Development

@@ -37,15 +37,16 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="parse_pdf",
             description=(
-                f"Parse PDF files to extract text, tables, formulas, and structure using MinerU v{mineru_version}. "
-                "Supports multiple backends including MLX-accelerated inference on Apple Silicon."
+                f"Parse PDF and image files (PDF, JPEG, PNG, etc.) to extract text, tables, formulas, and structure using MinerU v{mineru_version}. "
+                "Supports multiple backends including MLX-accelerated inference on Apple Silicon. "
+                "Works with documents, screenshots, photos, and scanned images."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "file_path": {
                         "type": "string",
-                        "description": "Absolute path to the PDF file to parse",
+                        "description": "Absolute path to the file to parse (supports PDF, JPEG, PNG, and other image formats)",
                     },
                     "backend": {
                         "type": "string",
@@ -84,7 +85,7 @@ async def list_tools() -> list[Tool]:
         ),
         Tool(
             name="list_backends",
-            description="Check system capabilities and list recommended backends for PDF parsing",
+            description="Check system capabilities and list recommended backends for document and image parsing",
             inputSchema={
                 "type": "object",
                 "properties": {},
