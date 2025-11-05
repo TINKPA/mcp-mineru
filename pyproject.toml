@@ -1,0 +1,33 @@
+[project]
+name = "mcp-mineru"
+version = "0.1.0"
+description = "MCP server for MinerU - PDF parsing with MLX acceleration on Apple Silicon"
+authors = [{name = "Your Name"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.0.0",
+    "pypdfium2",
+    "loguru",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "ruff",
+]
+
+[project.scripts]
+mcp-mineru = "mcp_mineru.server:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

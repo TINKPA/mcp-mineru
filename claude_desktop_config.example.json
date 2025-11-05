@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "mineru": {
+      "command": "python",
+      "args": [
+        "/absolute/path/to/mcp-mineru/src/mcp_mineru/server.py"
+      ],
+      "env": {
+        "PYTHONPATH": "/absolute/path/to/mcp-mineru/MinerU"
+      }
+    }
+  }
+}
