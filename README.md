@@ -10,12 +10,23 @@ A Model Context Protocol (MCP) server that brings powerful PDF parsing capabilit
 
 Get started in one command (requires [uv](https://docs.astral.sh/uv/)):
 
+### Option 1: Install for All Projects (Recommended)
+
+```bash
+claude mcp add --transport stdio --scope user mineru -- \
+  uvx --from mcp-mineru python -m mcp_mineru.server
+```
+
+This adds the server to your global config (`~/.claude.json`) and makes it available in all your projects.
+
+### Option 2: Install for Current Project Only
+
 ```bash
 claude mcp add --transport stdio mineru -- \
   uvx --from mcp-mineru python -m mcp_mineru.server
 ```
 
-That's it! The server will auto-install and be available in your current project.
+This adds the server only to your current project.
 
 ## ✨ Features
 
@@ -73,23 +84,9 @@ The `mineru[core]` dependency will automatically install all backends (pipeline,
 - ⚡️ **MLX** for Apple Silicon acceleration
 - 🌐 **Web interfaces** (Gradio, FastAPI)
 
-## 🔧 Configuration
+## 🔧 Advanced Configuration
 
-### One-Command Setup (Easiest)
-
-Install and configure in one step using `uvx`:
-
-```bash
-# One command does everything! (no manual install needed)
-claude mcp add --transport stdio mineru -- \
-  uvx --from mcp-mineru python -m mcp_mineru.server
-```
-
-This uses `uvx` to automatically install `mcp-mineru` in an isolated environment each time it runs. No need to install anything manually!
-
-**Configuration scope**: By default, this adds the server to your current project. To use across all projects, add `--scope user` flag.
-
-### Alternative: Traditional Setup
+### Traditional Setup (Manual Install)
 
 <details>
 <summary>If you prefer to install first, then configure (click to expand)</summary>
@@ -125,13 +122,6 @@ claude mcp add --transport stdio mineru -- \
 ```
 
 </details>
-
-**Configuration Scope Options**:
-- `--scope local` (default, recommended): Available in the current project
-- `--scope user`: Available across all your projects
-- `--scope project`: Shared with everyone via `.mcp.json` file
-
-**Note**: The `--` (double dash) separates Claude's CLI flags from the command that runs the MCP server. Everything after `--` is the actual command to execute.
 
 ### Claude Desktop (Manual Configuration)
 
