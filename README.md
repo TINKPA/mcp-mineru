@@ -37,7 +37,7 @@ Check system capabilities and get backend recommendations.
 
 ```bash
 # Clone the repository
-git clone <your-repo-url> mcp-mineru
+git clone https://github.com/TINKPA/mcp-mineru.git
 cd mcp-mineru
 
 # Install with all dependencies (one command!)
