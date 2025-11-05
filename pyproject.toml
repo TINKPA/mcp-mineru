@@ -2,14 +2,34 @@
 name = "mcp-mineru"
 version = "0.1.0"
 description = "MCP server for MinerU - PDF parsing with MLX acceleration on Apple Silicon"
-authors = [{name = "Your Name"}]
+authors = [{name = "TINKPA", email = "tinkpa@example.com"}]
 readme = "README.md"
+license = {text = "Apache-2.0"}
 requires-python = ">=3.10,<3.14"
+keywords = ["mcp", "mineru", "pdf", "parsing", "mlx", "apple-silicon", "claude"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: General",
+]
 dependencies = [
     "mcp>=1.0.0",
     "mineru[core]>=2.6.4",  # Includes all backends (pipeline, vlm, mlx)
     "loguru",
 ]
+
+[project.urls]
+Homepage = "https://github.com/TINKPA/mcp-mineru"
+Repository = "https://github.com/TINKPA/mcp-mineru"
+Issues = "https://github.com/TINKPA/mcp-mineru/issues"
+Documentation = "https://github.com/TINKPA/mcp-mineru#readme"
 
 [project.optional-dependencies]
 dev = [
