@@ -1,280 +1,113 @@
-# 🚀 MCP-MinerU
+# MCP-MinerU
 
 [![PyPI version](https://badge.fury.io/py/mcp-mineru.svg)](https://pypi.org/project/mcp-mineru/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
-A Model Context Protocol (MCP) server that brings powerful document and image parsing capabilities to Claude using [MinerU](https://github.com/opendatalab/MinerU). Extract text, tables, and formulas from PDFs, screenshots, photos, and scanned documents.
+MCP server for document and image parsing via [MinerU](https://github.com/opendatalab/MinerU). Extract text, tables, and formulas from PDFs, screenshots, and scanned documents with MLX acceleration on Apple Silicon.
 
-## 🚀 Quick Start
-
-Get started in one command (requires [uv](https://docs.astral.sh/uv/)):
-
-### Option 1: Install for All Projects (Recommended)
+## Installation
 
 ```bash
 claude mcp add --transport stdio --scope user mineru -- \
   uvx --from mcp-mineru python -m mcp_mineru.server
 ```
 
-This adds the server to your global config (`~/.claude.json`) and makes it available in all your projects.
+This command installs and configures the server for all your Claude Code projects using `uvx` (no manual installation required).
 
-### Option 2: Install for Current Project Only
+**Alternative methods**: See [Installation Guide](docs/INSTALLATION.md) for PyPI, source installation, and Claude Desktop configuration.
 
-```bash
-claude mcp add --transport stdio mineru -- \
-  uvx --from mcp-mineru python -m mcp_mineru.server
+## Features
+
+- **Multiple format support**: PDF, JPEG, PNG, and other image formats
+- **OCR capabilities**: Built-in text extraction from screenshots and photos
+- **Table recognition**: Preserves structure when extracting tables
+- **Formula extraction**: Converts mathematical equations to LaTeX
+- **MLX acceleration**: Optimized for Apple Silicon (M1/M2/M3/M4)
+- **Multiple backends**: Choose speed vs quality tradeoffs
+
+## Quick Start
+
+### Parse a PDF document
+```
+User: "Analyze the tables in research_paper.pdf"
+Claude: [Calls parse_pdf tool] "The paper contains 3 tables..."
 ```
 
-This adds the server only to your current project.
+### Extract text from a screenshot
+```
+User: "What does this screenshot say? image.png"
+Claude: [Calls parse_pdf tool] "The screenshot contains..."
+```
 
-## ✨ Features
+### Check system capabilities
+```
+User: "Which backend should I use?"
+Claude: [Calls list_backends tool] "Your system has Apple Silicon M4..."
+```
 
-- 📄 **Parse multiple formats**: PDF, JPEG, PNG, and other image formats
-- 📸 **Process screenshots and photos** with built-in OCR
-- 🧮 **Extract formulas** and mathematical equations
-- 📊 **Recognize tables** and preserve structure
-- ⚡️ **MLX acceleration** on Apple Silicon (M1/M2/M3/M4)
-- 🔄 **Multiple backends** for different use cases
-- 🤖 **MCP integration** for seamless use with Claude
+For more examples, see [Usage Examples](docs/EXAMPLES.md).
 
-## 🎯 Tools
+## Tools
 
-### `parse_pdf`
-Parse PDF and image files (PDF, JPEG, PNG, etc.) and extract structured content as Markdown. Works with documents, screenshots, photos, and scanned images.
+### parse_pdf
+
+Parse PDF and image files to extract structured content as Markdown.
 
 **Parameters:**
-- `file_path` (required): Absolute path to the file (supports PDF, JPEG, PNG, and other formats)
+- `file_path` (required): Absolute path to file (PDF, JPEG, PNG, etc.)
 - `backend` (optional): `pipeline` | `vlm-mlx-engine` | `vlm-transformers`
 - `formula_enable` (optional): Enable formula recognition (default: true)
 - `table_enable` (optional): Enable table recognition (default: true)
-- `start_page` (optional): Starting page number for PDFs (default: 0)
-- `end_page` (optional): Ending page number for PDFs (default: -1 for all pages)
+- `start_page` (optional): Starting page for PDFs (default: 0)
+- `end_page` (optional): Ending page for PDFs (default: -1)
 
-**Supported Formats:**
-- 📄 PDF documents
-- 📸 JPEG/JPG images
-- 🖼️ PNG images
-- 📷 Other image formats (WebP, GIF, etc.)
+### list_backends
 
-### `list_backends`
-Check system capabilities and get backend recommendations for document and image parsing.
+Check system capabilities and get backend recommendations.
 
-## 🛠️ Installation
+**Returns:** System information, available backends, and performance recommendations.
 
-### Prerequisites
-- Python 3.10-3.13
-- [uv](https://docs.astral.sh/uv/) (recommended) or pip
+## Supported Formats
 
-### Option 1: Install from PyPI (Recommended)
+- PDF documents (.pdf)
+- JPEG images (.jpg, .jpeg)
+- PNG images (.png)
+- Other image formats (WebP, GIF, etc.)
+
+## Performance
+
+Benchmarked on Apple Silicon M4 (16GB RAM):
+
+- **pipeline**: ~32s/page, CPU-only, good quality
+- **vlm-mlx-engine**: ~38s/page, Apple Silicon optimized, excellent quality
+- **vlm-transformers**: ~148s/page, highest quality, slowest
+
+## Documentation
+
+- [Installation Guide](docs/INSTALLATION.md) - Detailed installation options
+- [Usage Examples](docs/EXAMPLES.md) - More use cases and API reference
+- [MinerU Documentation](https://github.com/opendatalab/MinerU) - Underlying parsing engine
+
+## Development
 
 ```bash
-# Using uv (faster, recommended)
-uv pip install mcp-mineru
-```
-
-### Option 2: Install from Source
-
-```bash
-# Clone the repository
 git clone https://github.com/TINKPA/mcp-mineru.git
 cd mcp-mineru
+uv pip install -e ".[dev]"
 
-# Install in editable mode
-uv pip install -e .  # or: pip install -e .
-```
-
-The `mineru[core]` dependency will automatically install all backends (pipeline, vlm, mlx) including:
-- 🔥 **PyTorch** for deep learning models
-- 🖼️ **Computer Vision** libraries (OpenCV, ultralytics)
-- 📊 **OCR engines** (PaddleOCR, RapidOCR)
-- ⚡️ **MLX** for Apple Silicon acceleration
-- 🌐 **Web interfaces** (Gradio, FastAPI)
-
-## 🔧 Advanced Configuration
-
-### Traditional Setup (Manual Install)
-
-<details>
-<summary>If you prefer to install first, then configure (click to expand)</summary>
-
-**Step 1: Install**
-```bash
-uv pip install mcp-mineru
-# or: pip install mcp-mineru
-```
-
-**Step 2: Configure**
-```bash
-claude mcp add --transport stdio mineru -- \
-  python -m mcp_mineru.server
-```
-
-</details>
-
-<details>
-<summary>If installed from source (click to expand)</summary>
-
-```bash
-# Replace /absolute/path/to/mcp-mineru with your actual installation path
-claude mcp add --transport stdio mineru -- \
-  python /absolute/path/to/mcp-mineru/src/mcp_mineru/server.py
-```
-
-Or using uv:
-
-```bash
-claude mcp add --transport stdio mineru -- \
-  uv --directory /absolute/path/to/mcp-mineru run python src/mcp_mineru/server.py
-```
-
-</details>
-
-### Claude Desktop (Manual Configuration)
-
-Add to your Claude Desktop configuration file:
-
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-**If installed from PyPI** (simpler):
-
-```json
-{
-  "mcpServers": {
-    "mineru": {
-      "command": "python",
-      "args": ["-m", "mcp_mineru.server"]
-    }
-  }
-}
-```
-
-<details>
-<summary>If installed from source (click to expand)</summary>
-
-```json
-{
-  "mcpServers": {
-    "mineru": {
-      "command": "python",
-      "args": [
-        "/absolute/path/to/mcp-mineru/src/mcp_mineru/server.py"
-      ]
-    }
-  }
-}
-```
-
-Or using uv:
-
-```json
-{
-  "mcpServers": {
-    "mineru": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/absolute/path/to/mcp-mineru",
-        "run",
-        "python",
-        "src/mcp_mineru/server.py"
-      ]
-    }
-  }
-}
-```
-
-</details>
-
-## 📖 Usage Examples
-
-### Example 1: Parse a PDF
-```
-User: "Please analyze this research paper: /path/to/paper.pdf"
-
-Claude: [Calls parse_pdf tool]
-"This research paper discusses... The key findings in Table 3 show..."
-```
-
-### Example 2: Check system capabilities
-```
-User: "What's the best backend for my system?"
-
-Claude: [Calls list_backends tool]
-"Your system has Apple Silicon (M4). I recommend using the
-'vlm-mlx-engine' backend for fastest performance."
-```
-
-### Example 3: Extract specific pages
-```
-User: "Extract pages 10-15 from this PDF"
-
-Claude: [Calls parse_pdf with start_page=9, end_page=14]
-"Here's the content from pages 10-15..."
-```
-
-### Example 4: Parse a screenshot
-```
-User: "Extract the text from this screenshot: /path/to/screenshot.png"
-
-Claude: [Calls parse_pdf tool with image file]
-"The screenshot contains the following text: ..."
-```
-
-### Example 5: OCR a photo
-```
-User: "Read the text in this photo: /path/to/photo.jpg"
-
-Claude: [Calls parse_pdf tool]
-"I've extracted the text from the photo. It shows..."
-```
-
-## 🏗️ Development
-
-### Run tests
-```bash
+# Run tests
 pytest
-```
 
-### Format code
-```bash
+# Format code
 black src/
 ruff check src/
 ```
 
-## ❓ Troubleshooting
+## License
 
-### ModuleNotFoundError when running tests
+Apache License 2.0 - see [LICENSE](LICENSE) file for details.
 
-If you see errors like `ModuleNotFoundError: No module named 'mineru'` or `'torch'`:
+## Acknowledgments
 
-**Solution**: Reinstall the package to ensure all dependencies are installed:
-```bash
-pip install -e .
-```
-
-The `mineru[core]` dependency should automatically install all required backends.
-
-## 🚀 Performance
-
-On Apple Silicon (M4):
-- **pipeline backend**: ~32 seconds/page
-- **vlm-mlx-engine backend**: ~38 seconds/page (higher quality)
-- **vlm-transformers backend**: ~148 seconds/page
-
-*Benchmarked on a Mac mini M4 with 16GB RAM*
-
-## 📝 License
-
-This project uses MinerU as a submodule, which is licensed under the Apache License 2.0.
-
-## 🙏 Dependencies & Acknowledgments
-
-This project is built on top of:
-
-- **[MinerU](https://github.com/opendatalab/MinerU)** (Apache 2.0)
-  - Core PDF parsing engine
-  - Included as git submodule for development stability
-  
-- **[MCP](https://modelcontextprotocol.io/)** (MIT)
-  - Model Context Protocol specification
+Built on top of [MinerU](https://github.com/opendatalab/MinerU) by OpenDataLab.
