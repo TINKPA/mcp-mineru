@@ -86,6 +86,7 @@ Benchmarked on Apple Silicon M4 (16GB RAM):
 ## Documentation
 
 - [Installation Guide](docs/INSTALLATION.md) - Detailed installation options
+- [Updating Guide](docs/UPDATING.md) - How to update to the latest version
 - [Usage Examples](docs/EXAMPLES.md) - More use cases and API reference
 - [MinerU Documentation](https://github.com/opendatalab/MinerU) - Underlying parsing engine
 
