@@ -8,6 +8,7 @@ import asyncio
 import os
 import sys
 import tempfile
+import urllib.parse
 from pathlib import Path
 from typing import Any
 
@@ -107,7 +108,7 @@ async def call_tool(name: str, arguments: Any) -> list[TextContent]:
 
 async def _parse_pdf(args: dict) -> list[TextContent]:
     """Parse a PDF file"""
-    file_path = args["file_path"]
+    file_path = urllib.parse.unquote(args["file_path"])
     backend = args.get("backend", "pipeline")
     formula_enable = args.get("formula_enable", True)
     table_enable = args.get("table_enable", True)
