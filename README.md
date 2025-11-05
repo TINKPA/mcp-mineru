@@ -11,11 +11,11 @@ A Model Context Protocol (MCP) server that brings powerful PDF parsing capabilit
 Get started in one command (requires [uv](https://docs.astral.sh/uv/)):
 
 ```bash
-claude mcp add --transport stdio --scope user mineru -- \
+claude mcp add --transport stdio mineru -- \
   uvx --from mcp-mineru python -m mcp_mineru.server
 ```
 
-That's it! The server will auto-install and be available in all your Claude projects.
+That's it! The server will auto-install and be available in your current project.
 
 ## ✨ Features
 
@@ -81,11 +81,13 @@ Install and configure in one step using `uvx`:
 
 ```bash
 # One command does everything! (no manual install needed)
-claude mcp add --transport stdio --scope user mineru -- \
+claude mcp add --transport stdio mineru -- \
   uvx --from mcp-mineru python -m mcp_mineru.server
 ```
 
 This uses `uvx` to automatically install `mcp-mineru` in an isolated environment each time it runs. No need to install anything manually!
+
+**Configuration scope**: By default, this adds the server to your current project. To use across all projects, add `--scope user` flag.
 
 ### Alternative: Traditional Setup
 
@@ -100,7 +102,7 @@ uv pip install mcp-mineru
 
 **Step 2: Configure**
 ```bash
-claude mcp add --transport stdio --scope user mineru -- \
+claude mcp add --transport stdio mineru -- \
   python -m mcp_mineru.server
 ```
 
@@ -111,22 +113,22 @@ claude mcp add --transport stdio --scope user mineru -- \
 
 ```bash
 # Replace /absolute/path/to/mcp-mineru with your actual installation path
-claude mcp add --transport stdio --scope user mineru -- \
+claude mcp add --transport stdio mineru -- \
   python /absolute/path/to/mcp-mineru/src/mcp_mineru/server.py
 ```
 
 Or using uv:
 
 ```bash
-claude mcp add --transport stdio --scope user mineru -- \
+claude mcp add --transport stdio mineru -- \
   uv --directory /absolute/path/to/mcp-mineru run python src/mcp_mineru/server.py
 ```
 
 </details>
 
 **Configuration Scope Options**:
-- `--scope user` (recommended): Available across all your projects
-- `--scope local`: Available only in the current project (default)
+- `--scope local` (default, recommended): Available in the current project
+- `--scope user`: Available across all your projects
 - `--scope project`: Shared with everyone via `.mcp.json` file
 
 **Note**: The `--` (double dash) separates Claude's CLI flags from the command that runs the MCP server. Everything after `--` is the actual command to execute.
