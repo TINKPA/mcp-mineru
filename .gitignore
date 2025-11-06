@@ -48,3 +48,11 @@ htmlcov/
 # Temporary files
 *.tmp
 .temp/
+
+# Test files (temporary testing scripts)
+test_unicode_*.py
+test_screenshot_*.py
+test_mcp_unicode.py
+test_mcp_cli*.py
+test_mcp_cli*.sh
+check_unicode_file.py
