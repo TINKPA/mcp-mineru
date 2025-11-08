@@ -275,8 +275,8 @@ async def _list_backends() -> list[TextContent]:
     return [TextContent(type="text", text=response)]
 
 
-async def main():
-    """Run the MCP server"""
+async def async_main():
+    """Run the MCP server (async)"""
     logger.info("Starting MCP-MinerU server...")
     logger.info(f"MinerU version: {mineru_version}")
 
@@ -288,5 +288,10 @@ async def main():
         )
 
 
+def main():
+    """Entry point for the MCP server (sync wrapper)"""
+    asyncio.run(async_main())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
