@@ -56,3 +56,4 @@ test_mcp_unicode.py
 test_mcp_cli*.py
 test_mcp_cli*.sh
 check_unicode_file.py
+data/
