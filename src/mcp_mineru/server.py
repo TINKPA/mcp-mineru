@@ -8,6 +8,7 @@ import asyncio
 import os
 import sys
 import tempfile
+import unicodedata
 import urllib.parse
 from pathlib import Path
 from typing import Any
@@ -106,6 +107,60 @@ async def call_tool(name: str, arguments: Any) -> list[TextContent]:
         raise ValueError(f"Unknown tool: {name}")
 
 
+def resolve_file_path(file_path: str) -> str | None:
+    """
+    Resolve file path with Unicode normalization to handle macOS screenshot filenames.
+
+    macOS Sonoma screenshots contain U+202F (NARROW NO-BREAK SPACE) before AM/PM,
+    which causes file-not-found errors when users copy/paste paths with regular spaces.
+
+    This function replicates Claude Code's Read tool behavior:
+    1. Try exact path match
+    2. Try NFKC normalization (converts U+202F → regular space)
+    3. Try directory listing + normalized filename comparison
+
+    Args:
+        file_path: The file path to resolve (may contain Unicode characters)
+
+    Returns:
+        Resolved absolute path if file exists, None otherwise
+    """
+    # Try exact path first
+    if os.path.exists(file_path):
+        return file_path
+
+    # Try NFKC normalization (converts U+202F to regular space automatically)
+    # This is the key technique that makes Claude Code's Read tool work
+    normalized_path = unicodedata.normalize('NFKC', file_path)
+    if normalized_path != file_path and os.path.exists(normalized_path):
+        logger.info(f"Resolved file using NFKC normalization: {repr(normalized_path)}")
+        return normalized_path
+
+    # If absolute path failed, try directory listing + fuzzy match
+    # This handles cases where normalization alone isn't enough
+    if os.path.isabs(file_path):
+        dir_part = os.path.dirname(file_path)
+        file_part = os.path.basename(file_path)
+
+        if os.path.isdir(dir_part):
+            try:
+                # List all files in directory
+                for actual_filename in os.listdir(dir_part):
+                    # Compare using NFKC normalization
+                    normalized_actual = unicodedata.normalize('NFKC', actual_filename)
+                    normalized_requested = unicodedata.normalize('NFKC', file_part)
+
+                    if normalized_actual == normalized_requested:
+                        resolved = os.path.join(dir_part, actual_filename)
+                        logger.info(f"Resolved file using directory listing: {repr(resolved)}")
+                        return resolved
+            except OSError as e:
+                logger.warning(f"Error listing directory {dir_part}: {e}")
+
+    # File not found after all attempts
+    return None
+
+
 async def _parse_pdf(args: dict) -> list[TextContent]:
     """Parse a PDF file"""
     file_path = urllib.parse.unquote(args["file_path"])
@@ -115,12 +170,42 @@ async def _parse_pdf(args: dict) -> list[TextContent]:
     start_page = args.get("start_page", 0)
     end_page = args.get("end_page", -1)
 
-    # Validate file exists
-    if not os.path.exists(file_path):
-        return [TextContent(
-            type="text",
-            text=f"❌ Error: File not found: {file_path}"
-        )]
+    # Resolve file path with Unicode normalization
+    resolved_path = resolve_file_path(file_path)
+
+    if not resolved_path:
+        # Build helpful error message
+        error_msg = f"❌ Error: File not found: {file_path}"
+
+        # Check for Unicode characters
+        if any(ord(c) > 127 for c in file_path):
+            error_msg += f"\n\n💡 This path contains Unicode characters: {repr(file_path)}"
+
+        # Try to suggest similar files
+        if os.path.isabs(file_path):
+            dir_part = os.path.dirname(file_path)
+            if os.path.isdir(dir_part):
+                file_part = os.path.basename(file_path)
+                base_name = file_part.rsplit('.', 1)[0] if '.' in file_part else file_part
+
+                try:
+                    # Look for files with similar names
+                    similar_files = [
+                        f for f in os.listdir(dir_part)
+                        if base_name[:15] in f and os.path.isfile(os.path.join(dir_part, f))
+                    ]
+
+                    if similar_files:
+                        error_msg += f"\n\n💡 Similar files found in directory:\n"
+                        for f in similar_files[:5]:  # Show max 5
+                            error_msg += f"   - {f}\n"
+                except OSError:
+                    pass
+
+        return [TextContent(type="text", text=error_msg)]
+
+    # Use the resolved path for all subsequent operations
+    file_path = resolved_path
 
     try:
         # Read PDF
@@ -139,7 +224,7 @@ async def _parse_pdf(args: dict) -> list[TextContent]:
                 pdf_bytes_list=[pdf_bytes],
                 p_lang_list=["ch"],
                 backend=backend,
-                parse_method="auto",
+                parse_method="ocr",
                 formula_enable=formula_enable,
                 table_enable=table_enable,
                 server_url=None,
